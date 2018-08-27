@@ -11,7 +11,7 @@ logic [4:0] readReg2;
 logic [6:0] opcode;
 logic [3:0] operationAlu;
 logic [1:0] forwardingA,forwardingB;
-logic outAnd;
+logic outAnd,pc_Enable,bufferIFID_Enable;
 
 //asignaciones de señales internas
 assign opcode=instruction[6:0];
@@ -23,8 +23,10 @@ logic [N*2-1:0] pc_IF;
 logic [N-1:0] instruction_IF;
 
 //Señales buffer ID/EX
-logic ALUSrc_ID,branch_ID,memWrite_ID,memRead_ID,memToReg_ID,regWrite_ID;
+logic ALUSrc_ID,branch_ID,memWrite_ID,memRead_ID,memToReg_ID,regWrite_ID,mux_ID;
+logic ALUSrc_aux,branch_aux,memWrite_aux,memRead_aux,memToReg_aux,regWrite_aux;
 logic [1:0] ALUOp_ID;
+logic [1:0] ALUOp_aux;
 logic [3:0] instructionALUCtr_ID;
 logic [4:0] writeReg_ID,readReg1_ID,readReg2_ID;
 logic [N*2-1:0] pc_ID,data1_ID,data2_ID,immGen_ID;
@@ -51,18 +53,19 @@ logic [4:0] writeReg_MEM,writeReg_WB;
 logic [N*2-1:0] AddressMem_MEM,pcBranch_MEM,writeDataMem_MEM,readDataMem_MEM,readDataMem_WB,AddressMem_WB;
    
 //Conexionado etapa IF (instruction fetch)
-pc ProgramCounter (clk_div,rst,pcNext,pcActual);
+pc ProgramCounter (clk_div,rst,pc_Enable,pcNext,pcActual);
 add1 Add4Pc (pcActual,pcSum);
 instructionMemory ProgramMemory (pcActual,instruction_IF);
-buffer_IFtoID Buffer_IFID (clk_div,rst,pcActual,instruction_IF,pc_ID,instruction);
+buffer_IFtoID Buffer_IFID (clk_div,rst,bufferIFID_Enable,pcActual,instruction_IF,pc_ID,instruction);
 mux1 selDataPc (outAnd,pcSum,pcBranch_MEM,pcNext);
 
-
 //Conexionado etapa ID (instruction decode)
-control UnitControl (opcode,ALUOp_ID,branch_ID,memWrite_ID,memRead_ID,regWrite_ID,memToReg_ID,ALUSrc_ID,ledBlink);
+control UnitControl (opcode,ALUOp_aux,branch_aux,memWrite_aux,memRead_aux,regWrite_aux,memToReg_aux,ALUSrc_aux,ledBlink);
 register Registers (clk_div,regWrite_WB,readReg1,readReg2,writeReg_WB,writeDataReg,data1_ID,data2_ID);
 immGen ImmGenerate (instruction,immGen_ID);
 buffer_IDtoEX Buffer_IDEX (clk_div,rst,ALUSrc_ID,branch_ID,memWrite_ID,memRead_ID,memToReg_ID,regWrite_ID,ALUOp_ID,instructionALUCtr_ID,writeReg_ID,readReg1_ID,readReg2_ID,pc_ID,data1_ID,data2_ID,immGen_ID,ALUSrc_EX,branch_EX,memWrite_EX,memRead_EX,memToReg_EX,regWrite_EX,ALUOp_EX,instructionALUCtr_EX,writeReg_EX,readReg1_EX,readReg2_EX,pc_EX,data1_EX,data2_EX,immGen_EX);
+HazardDetUnit HazardDetectionUnit (memRead_EX,readReg1,readReg2,writeReg_EX,pc_Enable,bufferIFID_Enable,mux_ID);
+muxControl MuxCtrl (mux_ID,branch_aux,memWrite_aux,memRead_aux,regWrite_aux,memToReg_aux,ALUSrc_aux,ALUOp_aux,branch_ID,memWrite_ID,memRead_ID,regWrite_ID,memToReg_ID,ALUSrc_ID,ALUOp_ID);
 
 //Conexionado etapa EX (execution)
 mux2 selDataAlu1 (forwardingA,data1_EX,writeDataReg,AddressMem_MEM,dataAluA);

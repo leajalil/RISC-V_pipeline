@@ -17,7 +17,7 @@ module buffer_IDtoEX #(parameter N=32)
      
  always_ff @(posedge clk)
     if(rst) begin
-        ALUSrc_actual<=0;
+        ALUSrc_actual<=0;   
         branch_actual<=0;
         memWrite_actual<=0;
         memRead_actual<=0;

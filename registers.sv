@@ -14,9 +14,17 @@ initial
         end
     end
 
-always_ff @(posedge clk)
-    if(regWrite)
+//always_ff @(posedge clk)
+//    if(regWrite)begin
+//        ram[writeReg]<=dataWrite;
+//    end      
+   
+always_comb begin
+    if(regWrite)begin
         ram[writeReg]<=dataWrite;
+    end
+end  
+    
     
 assign readData1= (readReg1 == 0) ? 0:ram[readReg1];
 assign readData2= (readReg2 == 0) ? 0:ram[readReg2];
