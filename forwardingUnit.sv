@@ -19,14 +19,14 @@ always_comb begin
                forwardB=2'b00;
                end
         2'b01: begin
-                    if(writeReg_MEMtoWB==readReg1)begin
+                    if(writeReg_MEMtoWB==readReg1 & writeReg_MEMtoWB!=0)begin
                     forwardA=2'b01;
                     end
                     else begin
                     forwardA=2'b00;
                     end
                     
-                    if(writeReg_MEMtoWB==readReg2)begin
+                    if(writeReg_MEMtoWB==readReg2 & writeReg_MEMtoWB!=0)begin
                     forwardB=2'b01;
                     end
                     else begin
@@ -34,13 +34,13 @@ always_comb begin
                     end              
                end
         2'b10: begin
-                    if(writeReg_EXtoMEM==readReg1)begin
+                    if(writeReg_EXtoMEM==readReg1 & writeReg_EXtoMEM!=0)begin
                     forwardA=2'b10;
                     end
                     else begin
                     forwardA=2'b00;
                     end
-                    if(writeReg_EXtoMEM==readReg2)begin
+                    if(writeReg_EXtoMEM==readReg2 & writeReg_EXtoMEM!=0)begin
                     forwardB=2'b10;
                     end
                     else begin
@@ -48,20 +48,20 @@ always_comb begin
                     end               
                end 
         2'b11: begin
-                    if(writeReg_EXtoMEM==readReg1)begin
+                    if(writeReg_EXtoMEM==readReg1 & writeReg_EXtoMEM!=0)begin
                     forwardA=2'b10;
                     end
-                    else if(writeReg_MEMtoWB==readReg1)begin
+                    else if(writeReg_MEMtoWB==readReg1 & writeReg_MEMtoWB!=0)begin
                     forwardA=2'b01;
                     end
                     else begin
                     forwardA=2'b00;
                     end 
                                   
-                    if(writeReg_EXtoMEM==readReg2)begin
+                    if(writeReg_EXtoMEM==readReg2 & writeReg_EXtoMEM!=0)begin
                     forwardB=2'b10;
                     end
-                    else if(writeReg_MEMtoWB==readReg2)begin
+                    else if(writeReg_MEMtoWB==readReg2 & writeReg_MEMtoWB!=0)begin
                     forwardB=2'b01;
                     end
                     else begin
