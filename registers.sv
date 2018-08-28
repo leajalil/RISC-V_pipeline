@@ -21,7 +21,7 @@ initial
    
 always_comb begin
     if(regWrite)begin
-        ram[writeReg]<=dataWrite;
+        ram[writeReg]=dataWrite;
     end
 end  
     

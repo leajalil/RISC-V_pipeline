@@ -67,7 +67,12 @@ always_comb begin
                     else begin
                     forwardB=2'b00;
                     end               
-               end      
+               end 
+         default: begin
+                    forwardA=2'b00;
+                    forwardB=2'b00;
+                  end
+              
     endcase
 end
 

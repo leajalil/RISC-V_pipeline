@@ -1,7 +1,6 @@
 module alu #(parameter width=64)
     (input logic [3:0] operation,
      input logic [width-1:0] data1,data2,
-     output logic zero,
      output logic [width-1:0] aluResult);
      
 always_comb
@@ -15,6 +14,5 @@ begin
     endcase
 end
 
-assign zero=aluResult ? 0 : 1; 
     
 endmodule
