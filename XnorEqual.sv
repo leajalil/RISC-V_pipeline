@@ -7,8 +7,8 @@ module XnorEqual #(parameter N=32)
     
 logic [N*2-1:0] aux;
 
-assign aux=data1^data2;
+assign aux=data1-data2;
 
-assign zero=~aux ? 1:0;
+assign zero=aux ? 0:1;
  
 endmodule
